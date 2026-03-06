@@ -1,219 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>DiscoTube Controller</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>DiscoTube</title>
+<style>
+:root{--bg:#0a0a0f;--sf:#14141f;--cd:#1a1a2e;--bd:#2a2a40;--tx:#e8e8f0;--dim:#8888aa;--ac:#ff0080;--ac2:#00d4ff;--ac3:#a855f7;--ok:#22c55e;--warn:#eab308;--err:#ef4444;--glow:rgba(255,0,128,.3);--r:12px;--rs:8px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);max-width:480px;margin:0 auto;min-height:100vh;overflow-x:hidden;user-select:none;-webkit-user-select:none}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(135deg,#14141f,#1a1028);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
+header h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr{display:flex;align-items:center;gap:10px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--err);transition:background .3s}
+.dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.pwr{width:42px;height:42px;border-radius:50%;border:2px solid var(--bd);background:var(--sf);color:var(--dim);font-size:20px;cursor:pointer;transition:all .3s}
+.pwr.on{border-color:var(--ac);color:var(--ac);box-shadow:0 0 12px var(--glow)}
+nav{display:flex;background:var(--sf);border-bottom:1px solid var(--bd);position:sticky;top:57px;z-index:99;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+nav::-webkit-scrollbar{display:none}
+.tb{flex:1;min-width:64px;padding:10px 6px;background:none;border:none;border-bottom:3px solid transparent;color:var(--dim);font-size:11px;font-weight:600;cursor:pointer;transition:all .3s;white-space:nowrap}
+.tb.on{color:var(--ac);border-bottom-color:var(--ac)}
+.tc{display:none;padding:14px}
+.tc.on{display:block}
+.cd{background:var(--cd);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.cd h3{font-size:13px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.cpw{display:flex;flex-direction:column;align-items:center;gap:10px}
+#cw{border-radius:50%;cursor:crosshair;touch-action:none;box-shadow:0 0 16px rgba(0,0,0,.5)}
+.cpv{width:50px;height:50px;border-radius:50%;border:3px solid var(--bd);background:#ff0080;box-shadow:0 0 16px var(--glow);transition:all .3s}
+.ci{margin-top:10px}
+.ci label{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:12px;color:var(--dim)}
+.ci input[type="text"],.ci input[type="number"]{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);padding:7px 10px;font-size:13px;font-family:'Courier New',monospace;width:100%}
+.rr{display:flex;gap:6px}
+.rr label{flex:1}
+.rr input{width:100%!important}
+.pg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ps{aspect-ratio:1;border-radius:var(--rs);border:2px solid transparent;cursor:pointer;transition:all .2s}
+.ps:active{transform:scale(.9)}
+.ps.on{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.3)}
+.sg{display:flex;align-items:center;gap:8px}
+.sg .lb{font-size:16px;min-width:22px;text-align:center}
+.sg input[type="range"]{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--sf);outline:none}
+.sg input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--ac);cursor:pointer;box-shadow:0 0 6px var(--glow)}
+.sv{text-align:center;font-size:15px;font-weight:600;color:var(--ac2);margin-top:4px}
+.eg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.eb{padding:10px 6px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;text-transform:capitalize}
+.eb:active{transform:scale(.95)}
+.eb.on{background:linear-gradient(135deg,var(--ac),var(--ac3));border-color:var(--ac);color:#fff;box-shadow:0 0 12px var(--glow)}
+#av{width:100%;height:100px;border-radius:var(--rs);background:var(--sf)}
+.as{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.st{display:flex;align-items:center;gap:8px}
+.sl{font-size:11px;color:var(--dim);min-width:32px}
+.sb{flex:1;height:6px;background:var(--sf);border-radius:3px;overflow:hidden}
+.sf{height:100%;border-radius:3px;transition:width .1s;width:0}
+.sf.bass{background:var(--ac)}
+.sf.mid{background:var(--ok)}
+.sf.high{background:var(--ac2)}
+.bi{text-align:center;padding:8px;margin-top:10px;border-radius:var(--rs);background:var(--sf);font-size:16px;font-weight:700;opacity:.3;transition:all .1s}
+.bi.on{opacity:1;background:var(--ac);color:#fff;box-shadow:0 0 16px var(--glow)}
+.zl{display:flex;flex-direction:column;gap:10px}
+.zi{display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--sf);border-radius:var(--rs)}
+.zn{font-size:13px;font-weight:500;display:flex;flex-direction:column;gap:2px}
+.zd{font-size:10px;color:var(--dim);font-weight:400}
+.zi input[type="color"]{width:44px;height:32px;border:none;border-radius:var(--rs);cursor:pointer;background:none}
+.hn{font-size:11px;color:var(--dim);margin-bottom:10px}
+.sd{width:50px;height:160px;border-radius:25px;border:2px solid var(--bd);background:rgba(255,255,255,.03);position:relative;overflow:hidden;margin:0 auto}
+.ss{position:absolute;left:0;right:0}
+.ss.s1{bottom:0;height:50%;background:repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,0,128,.25) 3px,rgba(255,0,128,.25) 4px)}
+.ss.s2{top:0;height:50%;background:repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(0,128,255,.25) 3px,rgba(0,128,255,.25) 4px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;width:100%}
+.btn:active{transform:scale(.97)}
+.bg{background:linear-gradient(135deg,var(--ac),var(--ac2));border-color:transparent;color:#fff}
+.bs{background:var(--ac3);border-color:transparent;color:#fff;width:auto;min-width:72px}
+.bsm{padding:7px 12px;font-size:12px;width:auto}
+.bc{background:var(--err);border-color:transparent;color:#fff}
+.tc2{display:flex;gap:6px;flex-wrap:wrap}
+.ts{margin-top:8px;font-size:13px;color:var(--ac2);text-align:center}
+.ssc{display:flex;gap:6px}
+.ssc input{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);padding:8px 12px;font-size:13px}
+.scg{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.scb{padding:12px 10px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);color:var(--tx);font-size:13px;cursor:pointer;transition:all .2s;text-align:center}
+.scb:active{transform:scale(.95);background:var(--ac);border-color:var(--ac)}
+.di{margin-top:8px;padding:10px;background:var(--sf);border-radius:var(--rs);font-size:10px;color:var(--dim);overflow-x:auto;max-height:160px;white-space:pre-wrap;word-break:break-all}
+</style>
 </head>
 <body>
-    <div id="app">
-        <!-- Header -->
-        <header>
-            <h1>🎵 DiscoTube</h1>
-            <div class="header-controls">
-                <span id="connection-status" class="status-dot"></span>
-                <button id="btn-power" class="power-btn" onclick="togglePower()">⏻</button>
-            </div>
-        </header>
+<div id="app">
+<header>
+<h1>DiscoTube</h1>
+<div class="hdr">
+<span id="dot" class="dot"></span>
+<button id="pwr" class="pwr" onclick="tPwr()">&#x23FB;</button>
+</div>
+</header>
+<nav>
+<button class="tb on" data-t="colors" onclick="sTab('colors')">Colors</button>
+<button class="tb" data-t="effects" onclick="sTab('effects')">Effects</button>
+<button class="tb" data-t="music" onclick="sTab('music')">Music</button>
+<button class="tb" data-t="zones" onclick="sTab('zones')">Zones</button>
+<button class="tb" data-t="scenes" onclick="sTab('scenes')">Scenes</button>
+</nav>
 
-        <!-- Tab Navigation -->
-        <nav class="tabs">
-            <button class="tab active" data-tab="colors" onclick="switchTab('colors')">🎨 Colors</button>
-            <button class="tab" data-tab="effects" onclick="switchTab('effects')">✨ Effects</button>
-            <button class="tab" data-tab="music" onclick="switchTab('music')">🎵 Music</button>
-            <button class="tab" data-tab="zones" onclick="switchTab('zones')">📐 Zones</button>
-            <button class="tab" data-tab="scenes" onclick="switchTab('scenes')">💾 Scenes</button>
-        </nav>
+<!-- Colors -->
+<section id="t-colors" class="tc on">
+<div class="cd">
+<h3>Color</h3>
+<div class="cpw">
+<canvas id="cw" width="240" height="240"></canvas>
+<div id="cpv" class="cpv"></div>
+</div>
+<div class="ci">
+<label>HEX <input type="text" id="hex" value="#FF0080" onchange="sHex(this.value)" maxlength="7"></label>
+<div class="rr">
+<label>R <input type="number" id="ri" min="0" max="255" value="255" onchange="sRGB()"></label>
+<label>G <input type="number" id="gi" min="0" max="255" value="0" onchange="sRGB()"></label>
+<label>B <input type="number" id="bi" min="0" max="255" value="128" onchange="sRGB()"></label>
+</div>
+</div>
+</div>
+<div class="cd">
+<h3>Quick Colors</h3>
+<div id="presets" class="pg"></div>
+</div>
+<div class="cd">
+<h3>Brightness</h3>
+<div class="sg">
+<span class="lb">&#x1F311;</span>
+<input type="range" id="bri" min="0" max="100" value="80" oninput="dBri(this.value)">
+<span class="lb">&#x2600;</span>
+</div>
+<div class="sv" id="brv">80%</div>
+</div>
+</section>
 
-        <!-- ═══ Colors Tab ═══ -->
-        <section id="tab-colors" class="tab-content active">
-            <!-- Color Wheel -->
-            <div class="card">
-                <h3>Color</h3>
-                <div class="color-picker-wrap">
-                    <canvas id="color-wheel" width="280" height="280"></canvas>
-                    <div id="color-preview" class="color-preview"></div>
-                </div>
-                <div class="color-inputs">
-                    <label>HEX <input type="text" id="hex-input" value="#FF0080" 
-                           onchange="setColorHex(this.value)" maxlength="7"></label>
-                    <div class="rgb-row">
-                        <label>R <input type="number" id="r-input" min="0" max="255" value="255"
-                               onchange="setColorRGB()"></label>
-                        <label>G <input type="number" id="g-input" min="0" max="255" value="0"
-                               onchange="setColorRGB()"></label>
-                        <label>B <input type="number" id="b-input" min="0" max="255" value="128"
-                               onchange="setColorRGB()"></label>
-                    </div>
-                </div>
-            </div>
+<!-- Effects -->
+<section id="t-effects" class="tc">
+<div class="cd">
+<h3>Speed</h3>
+<div class="sg">
+<span class="lb">&#x1F422;</span>
+<input type="range" id="spd" min="1" max="100" value="50" oninput="dSpd(this.value)">
+<span class="lb">&#x1F407;</span>
+</div>
+<div class="sv" id="spv">50%</div>
+</div>
+<div class="cd">
+<h3>Effects</h3>
+<div id="efx" class="eg"></div>
+</div>
+</section>
 
-            <!-- Color Presets -->
-            <div class="card">
-                <h3>Quick Colors</h3>
-                <div id="color-presets" class="preset-grid"></div>
-            </div>
+<!-- Music -->
+<section id="t-music" class="tc">
+<div class="cd">
+<h3>Music Mode</h3>
+<div id="mm" class="eg"></div>
+</div>
+<div class="cd">
+<h3>Sensitivity</h3>
+<div class="sg">
+<span class="lb">Low</span>
+<input type="range" id="msen" min="10" max="300" value="100" oninput="dSen(this.value)">
+<span class="lb">High</span>
+</div>
+<div class="sv" id="senv">1.0x</div>
+</div>
+<div class="cd">
+<h3>Audio</h3>
+<canvas id="av" width="320" height="100"></canvas>
+<div class="as">
+<div class="st"><span class="sl">Bass</span><div class="sb"><div id="bb" class="sf bass"></div></div></div>
+<div class="st"><span class="sl">Mid</span><div class="sb"><div id="bm" class="sf mid"></div></div></div>
+<div class="st"><span class="sl">High</span><div class="sb"><div id="bh" class="sf high"></div></div></div>
+</div>
+<div id="beat" class="bi">BEAT</div>
+</div>
+</section>
 
-            <!-- Color Temperature -->
-            <div class="card">
-                <h3>Color Temperature</h3>
-                <div class="slider-group">
-                    <span class="label">🕯️ Warm</span>
-                    <input type="range" id="color-temp" min="2000" max="9000" value="4000"
-                           oninput="setColorTemp(this.value)">
-                    <span class="label">❄️ Cool</span>
-                </div>
-                <div class="temp-value" id="temp-value">4000K</div>
-            </div>
+<!-- Zones -->
+<section id="t-zones" class="tc">
+<div class="cd">
+<h3>Layout</h3>
+<p class="hn">LEDs spiral inside tube - 100 pixels - ~2.6 px/rev</p>
+<div class="sd"><div class="ss s1"></div><div class="ss s2"></div></div>
+</div>
+<div class="cd">
+<h3>Zones</h3>
+<div class="zl">
+<div class="zi">
+<div class="zn">Bottom Half<span class="zd">Pixels 0-49</span></div>
+<input type="color" id="z0" value="#ff0080" onchange="sZone(0,this.value)">
+</div>
+<div class="zi">
+<div class="zn">Top Half<span class="zd">Pixels 50-99</span></div>
+<input type="color" id="z1" value="#0080ff" onchange="sZone(1,this.value)">
+</div>
+</div>
+</div>
+<div class="cd">
+<h3>Gradient</h3>
+<button class="btn bg" onclick="aGrad()">Apply Gradient</button>
+</div>
+<div class="cd">
+<h3>Auto-Off Timer</h3>
+<div class="tc2">
+<button class="btn bsm" onclick="sTmr(15)">15m</button>
+<button class="btn bsm" onclick="sTmr(30)">30m</button>
+<button class="btn bsm" onclick="sTmr(60)">1h</button>
+<button class="btn bsm" onclick="sTmr(120)">2h</button>
+<button class="btn bsm bc" onclick="sTmr(0)">Off</button>
+</div>
+<div id="tmrs" class="ts"></div>
+</div>
+</section>
 
-            <!-- Brightness -->
-            <div class="card">
-                <h3>Brightness</h3>
-                <div class="slider-group">
-                    <span class="label">🌑</span>
-                    <input type="range" id="brightness" min="0" max="100" value="80"
-                           oninput="setBrightness(this.value)">
-                    <span class="label">☀️</span>
-                </div>
-                <div class="slider-value" id="brightness-value">80%</div>
-            </div>
-        </section>
+<!-- Scenes -->
+<section id="t-scenes" class="tc">
+<div class="cd">
+<h3>Save Scene</h3>
+<div class="ssc">
+<input type="text" id="sn" placeholder="Scene name...">
+<button class="btn bs" onclick="saveSc()">Save</button>
+</div>
+</div>
+<div class="cd">
+<h3>Quick Scenes</h3>
+<div class="scg">
+<button class="scb" onclick="qSc('party')">Party</button>
+<button class="scb" onclick="qSc('chill')">Chill</button>
+<button class="scb" onclick="qSc('focus')">Focus</button>
+<button class="scb" onclick="qSc('romantic')">Romantic</button>
+<button class="scb" onclick="qSc('ocean')">Ocean</button>
+<button class="scb" onclick="qSc('forest')">Forest</button>
+<button class="scb" onclick="qSc('sunset')">Sunset</button>
+<button class="scb" onclick="qSc('disco')">Disco</button>
+</div>
+</div>
+<div class="cd">
+<h3>Saved Scenes</h3>
+<div id="ssc" class="scg"></div>
+</div>
+<div class="cd">
+<h3>Device Info</h3>
+<button class="btn" onclick="devInfo()">Show Info</button>
+<pre id="dinfo" class="di"></pre>
+</div>
+</section>
+</div>
 
-        <!-- ═══ Effects Tab ═══ -->
-        <section id="tab-effects" class="tab-content">
-            <div class="card">
-                <h3>Effect Speed</h3>
-                <div class="slider-group">
-                    <span class="label">🐢</span>
-                    <input type="range" id="speed" min="1" max="100" value="50"
-                           oninput="setSpeed(this.value)">
-                    <span class="label">🐇</span>
-                </div>
-                <div class="slider-value" id="speed-value">50%</div>
-            </div>
-            <div class="card">
-                <h3>Effects</h3>
-                <div id="effects-grid" class="effects-grid"></div>
-            </div>
-        </section>
+<script>
+var S={power:0,bri:80,spd:50,fx:'rainbow',color:{r:255,g:0,b:128},mm:'off',msen:1.0};
+var _poll,_apoll,_dbt={};
 
-        <!-- ═══ Music Tab ═══ -->
-        <section id="tab-music" class="tab-content">
-            <div class="card">
-                <h3>Music Reactive Mode</h3>
-                <div id="music-modes" class="effects-grid"></div>
-            </div>
-            <div class="card">
-                <h3>Sensitivity</h3>
-                <div class="slider-group">
-                    <span class="label">Low</span>
-                    <input type="range" id="music-sensitivity" min="10" max="300" value="100"
-                           oninput="setMusicSensitivity(this.value)">
-                    <span class="label">High</span>
-                </div>
-                <div class="slider-value" id="sensitivity-value">1.0x</div>
-            </div>
-            <div class="card">
-                <h3>Audio Visualizer</h3>
-                <canvas id="audio-viz" width="320" height="120"></canvas>
-                <div class="audio-stats">
-                    <div class="stat"><span class="stat-label">Bass</span><div class="stat-bar"><div id="bar-bass" class="stat-fill bass"></div></div></div>
-                    <div class="stat"><span class="stat-label">Mid</span><div class="stat-bar"><div id="bar-mid" class="stat-fill mid"></div></div></div>
-                    <div class="stat"><span class="stat-label">High</span><div class="stat-bar"><div id="bar-high" class="stat-fill high"></div></div></div>
-                </div>
-                <div id="beat-indicator" class="beat-indicator">🥁 BEAT</div>
-            </div>
-        </section>
+document.addEventListener('DOMContentLoaded',function(){
+iCW();iPresets();iEfx();iMM();fState();
+_poll=setInterval(fState,5000);
+});
 
-        <!-- ═══ Zones Tab ═══ -->
-        <section id="tab-zones" class="tab-content">
-            <div class="card">
-                <h3>Spiral Layout</h3>
-                <p class="hint">LEDs spiral inside the white acrylic tube · ~2.6 pixels per revolution · 38 wraps bottom→top</p>
-                <div class="spiral-info">
-                    <div class="spiral-diagram">
-                        <div class="spiral-strip strip-1"></div>
-                        <div class="spiral-strip strip-2"></div>
-                        <span class="spiral-label bottom">Strip 1 · Bottom</span>
-                        <span class="spiral-label top">Strip 2 · Top</span>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <h3>Strip Zones</h3>
-                <p class="hint">WS2811 strip spirals continuously up the tube (100 pixels)</p>
-                <div class="zone-list">
-                    <div class="zone-item">
-                        <div class="zone-label">🌀 Bottom Half
-                            <span class="zone-detail">Pixels 0–49 · Wraps 1–19</span>
-                        </div>
-                        <input type="color" id="zone-0-color" value="#ff0080"
-                               onchange="setZoneColor(0, this.value)">
-                    </div>
-                    <div class="zone-item">
-                        <div class="zone-label">🌀 Top Half
-                            <span class="zone-detail">Pixels 50–99 · Wraps 20–38</span>
-                        </div>
-                        <input type="color" id="zone-1-color" value="#0080ff"
-                               onchange="setZoneColor(1, this.value)">
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <h3>Spiral Gradient</h3>
-                <button class="btn btn-gradient" onclick="applyGradient()">Apply Vertical Gradient</button>
-                <p class="hint">Blends the two strip colors along the spiral path</p>
-            </div>
-            <div class="card">
-                <h3>Auto-Off Timer</h3>
-                <div class="timer-controls">
-                    <button class="btn btn-sm" onclick="setTimer(15)">15m</button>
-                    <button class="btn btn-sm" onclick="setTimer(30)">30m</button>
-                    <button class="btn btn-sm" onclick="setTimer(60)">1h</button>
-                    <button class="btn btn-sm" onclick="setTimer(120)">2h</button>
-                    <button class="btn btn-sm btn-cancel" onclick="setTimer(0)">Cancel</button>
-                </div>
-                <div id="timer-status" class="timer-status"></div>
-            </div>
-        </section>
+function db(k,fn,ms){clearTimeout(_dbt[k]);_dbt[k]=setTimeout(fn,ms||150);}
 
-        <!-- ═══ Scenes Tab ═══ -->
-        <section id="tab-scenes" class="tab-content">
-            <div class="card">
-                <h3>Save Current Scene</h3>
-                <div class="save-scene">
-                    <input type="text" id="scene-name" placeholder="Scene name...">
-                    <button class="btn btn-save" onclick="saveScene()">💾 Save</button>
-                </div>
-            </div>
-            <div class="card">
-                <h3>Quick Scenes</h3>
-                <div class="scene-grid">
-                    <button class="scene-btn" onclick="applyQuickScene('party')">🎉 Party</button>
-                    <button class="scene-btn" onclick="applyQuickScene('chill')">😌 Chill</button>
-                    <button class="scene-btn" onclick="applyQuickScene('focus')">🧠 Focus</button>
-                    <button class="scene-btn" onclick="applyQuickScene('romantic')">❤️ Romantic</button>
-                    <button class="scene-btn" onclick="applyQuickScene('ocean')">🌊 Ocean</button>
-                    <button class="scene-btn" onclick="applyQuickScene('forest')">🌲 Forest</button>
-                    <button class="scene-btn" onclick="applyQuickScene('sunset')">🌅 Sunset</button>
-                    <button class="scene-btn" onclick="applyQuickScene('disco')">🪩 Disco</button>
-                </div>
-            </div>
-            <div class="card">
-                <h3>Saved Scenes</h3>
-                <div id="saved-scenes" class="scene-grid"></div>
-            </div>
-            <div class="card">
-                <h3>Device Info</h3>
-                <button class="btn" onclick="discoverDevices()">🔍 Device Info</button>
-                <pre id="device-info" class="device-info"></pre>
-            </div>
-        </section>
-    </div>
+function api(ep,m,d,cb){
+var x=new XMLHttpRequest();
+x.open(m||'GET',ep,true);
+x.setRequestHeader('Content-Type','application/json');
+x.timeout=4000;
+x.onload=function(){
+if(x.status===200){
+document.getElementById('dot').classList.add('on');
+try{var j=JSON.parse(x.responseText);if(cb)cb(j);}catch(e){if(cb)cb(null);}
+}
+};
+x.onerror=x.ontimeout=function(){document.getElementById('dot').classList.remove('on');};
+x.send(d?JSON.stringify(d):null);
+}
 
-    <script src="app.js"></script>
+function fState(){
+api('/api/state','GET',null,function(s){
+if(!s)return;
+if(s.power!==undefined)S.power=s.power;
+if(s.brightness!==undefined)S.bri=s.brightness;
+if(s.speed!==undefined)S.spd=s.speed;
+if(s.effect)S.fx=s.effect;
+if(s.color)S.color=s.color;
+if(s.musicMode)S.mm=s.musicMode;
+if(s.musicSensitivity!==undefined)S.msen=s.musicSensitivity;
+uUI();
+if(S.mm!=='off'&&!_apoll)_apoll=setInterval(fAudio,500);
+else if(S.mm==='off'&&_apoll){clearInterval(_apoll);_apoll=null;}
+});
+}
+function fAudio(){api('/api/music/state','GET',null,function(s){if(s&&s.audio)uAudio(s.audio);});}
+
+function sTab(t){
+var tb=document.querySelectorAll('.tb'),tc=document.querySelectorAll('.tc');
+for(var i=0;i<tb.length;i++)tb[i].classList.toggle('on',tb[i].getAttribute('data-t')===t);
+for(var i=0;i<tc.length;i++)tc[i].classList.toggle('on',tc[i].id==='t-'+t);
+}
+
+function tPwr(){S.power=!S.power;api('/api/power/toggle','POST');uPwr();}
+function uPwr(){document.getElementById('pwr').classList.toggle('on',!!S.power);}
+
+function iCW(){
+var c=document.getElementById('cw'),ctx=c.getContext('2d'),sz=c.width,ctr=sz/2,rad=ctr-4;
+for(var a=0;a<360;a++){
+var s=((a-1)*Math.PI)/180,e=((a+1)*Math.PI)/180;
+var g=ctx.createRadialGradient(ctr,ctr,0,ctr,ctr,rad);
+g.addColorStop(0,'white');g.addColorStop(1,'hsl('+a+',100%,50%)');
+ctx.beginPath();ctx.moveTo(ctr,ctr);ctx.arc(ctr,ctr,rad,s,e);ctx.closePath();
+ctx.fillStyle=g;ctx.fill();
+}
+function hc(ev){
+ev.preventDefault();
+var r=c.getBoundingClientRect(),t=ev.touches?ev.touches[0]:ev;
+var x=t.clientX-r.left-ctr,y=t.clientY-r.top-ctr;
+if(Math.sqrt(x*x+y*y)<=rad){
+var p=ctx.getImageData(t.clientX-r.left,t.clientY-r.top,1,1).data;
+sRGBd(p[0],p[1],p[2]);
+}
+}
+c.addEventListener('mousedown',hc);
+c.addEventListener('mousemove',function(e){if(e.buttons)hc(e);});
+c.addEventListener('touchstart',hc,{passive:false});
+c.addEventListener('touchmove',hc,{passive:false});
+}
+
+function sRGBd(r,g,b){S.color={r:r,g:g,b:b};uColor();db('color',function(){api('/api/color','POST',{r:r,g:g,b:b});},100);}
+function sRGB(){
+var r=parseInt(document.getElementById('ri').value)||0,g=parseInt(document.getElementById('gi').value)||0,b=parseInt(document.getElementById('bi').value)||0;
+sRGBd(r,g,b);
+}
+function sHex(h){h=h.replace('#','');if(h.length===6)sRGBd(parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16));}
+function uColor(){
+var c=S.color,h='#'+[c.r,c.g,c.b].map(function(v){return v.toString(16).padStart(2,'0');}).join('');
+document.getElementById('hex').value=h;
+document.getElementById('ri').value=c.r;document.getElementById('gi').value=c.g;document.getElementById('bi').value=c.b;
+var pv=document.getElementById('cpv');pv.style.background=h;pv.style.boxShadow='0 0 16px '+h+'80';
+}
+
+var CP={warm_white:[255,200,150],cool_white:[200,220,255],red:[255,0,0],green:[0,255,0],blue:[0,0,255],purple:[128,0,255],orange:[255,100,0],cyan:[0,255,255],pink:[255,50,150],gold:[255,180,0],disco_pink:[255,0,128],neon_green:[57,255,20],deep_blue:[0,0,180],sunset:[255,80,20],ice:[150,220,255]};
+function iPresets(){
+var g=document.getElementById('presets');
+for(var n in CP){var c=CP[n],d=document.createElement('div');d.className='ps';d.style.background='rgb('+c[0]+','+c[1]+','+c[2]+')';
+(function(r,gg,b){d.onclick=function(){sRGBd(r,gg,b);};})(c[0],c[1],c[2]);g.appendChild(d);}
+}
+
+function dBri(v){S.bri=parseInt(v);document.getElementById('brv').textContent=v+'%';db('bri',function(){api('/api/brightness','POST',{value:parseInt(v)});});}
+function dSpd(v){S.spd=parseInt(v);document.getElementById('spv').textContent=v+'%';db('spd',function(){api('/api/speed','POST',{value:parseInt(v)});});}
+
+var EL=['solid','rainbow','rainbow_wave','gradient','breathing','pulse','strobe','fire','ice_fire','plasma','matrix','rain','aurora','sparkle','comet','theater_chase','color_wipe','twinkle','lava_lamp','vortex','dna_helix','equalizer','wave','candy','ocean','sunset_glow'];
+function iEfx(){
+var g=document.getElementById('efx');
+EL.forEach(function(n){var b=document.createElement('button');b.className='eb';b.setAttribute('data-fx',n);
+b.textContent=n.replace(/_/g,' ');b.onclick=function(){sFx(n);};g.appendChild(b);});
+}
+function sFx(n){S.fx=n;uEfx();api('/api/effect','POST',{name:n});}
+function uEfx(){var bs=document.querySelectorAll('.eb[data-fx]');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-fx')===S.fx);}
+
+var ML=[{id:'off',l:'Off'},{id:'spectrum',l:'Spectrum'},{id:'pulse',l:'Pulse'},{id:'energy',l:'Energy'},{id:'vu_meter',l:'VU Meter'},{id:'equalizer',l:'EQ'}];
+function iMM(){
+var g=document.getElementById('mm');
+ML.forEach(function(m){var b=document.createElement('button');b.className='eb';b.setAttribute('data-mm',m.id);
+b.textContent=m.l;b.onclick=function(){sMM(m.id);};g.appendChild(b);});
+}
+function sMM(m){
+S.mm=m;uMM();api('/api/music/mode','POST',{mode:m});
+if(m!=='off'&&!_apoll)_apoll=setInterval(fAudio,500);
+else if(m==='off'&&_apoll){clearInterval(_apoll);_apoll=null;}
+}
+function dSen(v){var s=v/100;S.msen=s;document.getElementById('senv').textContent=s.toFixed(1)+'x';db('msen',function(){api('/api/music/sensitivity','POST',{value:s});});}
+function uMM(){var bs=document.querySelectorAll('[data-mm]');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-mm')===S.mm);}
+
+function uAudio(a){
+var bb=document.getElementById('bb'),bm=document.getElementById('bm'),bh=document.getElementById('bh');
+if(bb)bb.style.width=(a.bass*100)+'%';if(bm)bm.style.width=(a.mid*100)+'%';if(bh)bh.style.width=(a.high*100)+'%';
+document.getElementById('beat').classList.toggle('on',!!a.beat);
+var cv=document.getElementById('av');if(!cv)return;
+var ctx=cv.getContext('2d'),w=cv.width,h=cv.height;
+ctx.fillStyle='#14141f';ctx.fillRect(0,0,w,h);
+if(a.eq&&a.eq.length){var bw=w/a.eq.length-2;
+for(var i=0;i<a.eq.length;i++){var bh2=a.eq[i]*h*.9,x=i*(bw+2)+1,y=h-bh2;
+var gr=ctx.createLinearGradient(x,h,x,y);gr.addColorStop(0,'#ff0080');gr.addColorStop(.5,'#a855f7');gr.addColorStop(1,'#00d4ff');
+ctx.fillStyle=gr;ctx.fillRect(x,y,bw,bh2);ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(x,y,bw,2);}}
+}
+
+function sZone(z,h){var r=parseInt(h.substr(1,2),16),g=parseInt(h.substr(3,2),16),b=parseInt(h.substr(5,2),16);api('/api/zones','POST',{zone:z,r:r,g:g,b:b});}
+function aGrad(){sZone(0,document.getElementById('z0').value);setTimeout(function(){sZone(1,document.getElementById('z1').value);},700);sFx('gradient');}
+function sTmr(m){api('/api/timer','POST',{minutes:m});document.getElementById('tmrs').textContent=m>0?'Auto-off in '+m+' min':'';}
+
+var QS={party:{fx:'rainbow_wave',spd:80,bri:100,c:[255,0,128]},chill:{fx:'breathing',spd:20,bri:50,c:[0,128,255]},focus:{fx:'solid',spd:50,bri:70,c:[255,200,150]},romantic:{fx:'lava_lamp',spd:25,bri:40,c:[255,50,100]},ocean:{fx:'ocean',spd:30,bri:60,c:[0,100,200]},forest:{fx:'aurora',spd:30,bri:50,c:[0,200,50]},sunset:{fx:'sunset_glow',spd:15,bri:70,c:[255,80,20]},disco:{fx:'strobe',spd:90,bri:100,c:[255,0,255]}};
+function qSc(n){
+var s=QS[n];if(!s)return;S.fx=s.fx;S.spd=s.spd;S.bri=s.bri;S.color={r:s.c[0],g:s.c[1],b:s.c[2]};
+api('/api/effect','POST',{name:s.fx});
+setTimeout(function(){api('/api/speed','POST',{value:s.spd});},200);
+setTimeout(function(){api('/api/brightness','POST',{value:s.bri});},400);
+setTimeout(function(){api('/api/color','POST',{r:s.c[0],g:s.c[1],b:s.c[2]});},600);
+uUI();
+}
+function saveSc(){var ni=document.getElementById('sn'),n=ni.value.trim();if(!n)return;api('/api/preset/save','POST',{name:n});ni.value='';loadSc();}
+function loadSc(){api('/api/presets','GET',null,function(r){if(!r||!r.presets)return;var c=document.getElementById('ssc');c.innerHTML='';for(var n in r.presets){var b=document.createElement('button');b.className='scb';b.textContent=n;(function(nm){b.onclick=function(){api('/api/preset/apply','POST',{name:nm});};})(n);c.appendChild(b);}});}
+function devInfo(){var el=document.getElementById('dinfo');el.textContent='Querying...';api('/api/state','GET',null,function(r){el.textContent=r?JSON.stringify(r,null,2):'No info';});}
+
+function uUI(){
+uPwr();uColor();uEfx();uMM();
+document.getElementById('bri').value=S.bri;document.getElementById('brv').textContent=S.bri+'%';
+document.getElementById('spd').value=S.spd;document.getElementById('spv').textContent=S.spd+'%';
+var sp=Math.round(S.msen*100);document.getElementById('msen').value=sp;document.getElementById('senv').textContent=S.msen.toFixed(1)+'x';
+}
+</script>
 </body>
 </html>

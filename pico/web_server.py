@@ -37,6 +37,13 @@ class DiscoWebServer:
         """Connect to WiFi and return IP address."""
         self.wlan = network.WLAN(network.STA_IF)
         self.wlan.active(True)
+
+        # If already connected, just grab the IP
+        if self.wlan.isconnected():
+            self.ip = self.wlan.ifconfig()[0]
+            print(f"WiFi already connected! IP: {self.ip}")
+            return self.ip
+
         self.wlan.connect(ssid, password)
 
         print(f"Connecting to WiFi '{ssid}'...")
@@ -53,13 +60,36 @@ class DiscoWebServer:
 
     def start(self):
         """Start the HTTP server."""
+        # Close any leftover socket from a previous run
+        if self.server:
+            try:
+                self.server.close()
+            except:
+                pass
+            self.server = None
+
         addr = socket.getaddrinfo(self.ip, self.port)[0][-1]
-        self.server = socket.socket()
-        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server.bind(addr)
-        self.server.listen(4)
-        self.server.settimeout(0.1)
-        print(f"DiscoTube server running at http://{self.ip}:{self.port}")
+
+        # Retry binding in case of EADDRINUSE after soft reset
+        for attempt in range(5):
+            try:
+                self.server = socket.socket()
+                self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                self.server.bind(addr)
+                self.server.listen(5)
+                self.server.settimeout(0.05)
+                print(f"DiscoTube server running at http://{self.ip}:{self.port}")
+                return
+            except OSError as e:
+                print(f"Bind attempt {attempt + 1} failed: {e}")
+                try:
+                    self.server.close()
+                except:
+                    pass
+                self.server = None
+                time.sleep(2)
+
+        raise RuntimeError("Could not bind to port after 5 attempts")
 
     def poll(self):
         """
@@ -68,9 +98,9 @@ class DiscoWebServer:
         """
         try:
             cl, addr = self.server.accept()
-            cl.settimeout(5)
+            cl.settimeout(3)
             try:
-                request = cl.recv(2048).decode("utf-8")
+                request = cl.recv(4096).decode("utf-8")
                 if request:
                     self._handle_request(cl, request)
             except Exception as e:
@@ -212,7 +242,7 @@ class DiscoWebServer:
         self._send_json(client, response)
 
     def _serve_static(self, client, path):
-        """Serve static files from the web/ directory."""
+        """Serve static files from the web/ directory, streaming from disk."""
         if path == "/" or path == "":
             path = "/index.html"
 
@@ -227,12 +257,31 @@ class DiscoWebServer:
         content_type = self.MIME_TYPES.get(ext, "text/plain")
 
         try:
-            with open(filepath, "r") as f:
-                content = f.read()
-            self._send_response(client, 200, content_type, content)
+            # Get file size without reading into RAM
+            import os
+            stat = os.stat(filepath)
+            size = stat[6]
+
+            # Send header first
+            header = (
+                f"HTTP/1.1 200 OK\r\n"
+                f"Content-Type: {content_type}\r\n"
+                f"Content-Length: {size}\r\n"
+                f"Cache-Control: max-age=86400\r\n"
+                f"Connection: close\r\n\r\n"
+            )
+            client.send(header.encode())
+
+            # Stream file in chunks to save RAM
+            with open(filepath, "rb") as f:
+                while True:
+                    chunk = f.read(1024)
+                    if not chunk:
+                        break
+                    client.send(chunk)
         except OSError:
             self._send_response(client, 404, "text/html",
-                                "<h1>404 Not Found</h1>")
+                                "<h1>404</h1>")
 
     def _send_json(self, client, data):
         """Send a JSON response."""
