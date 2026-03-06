@@ -1,0 +1,122 @@
+// ============================================================
+// DiscoTube Mobile – Theme & Constants
+// ============================================================
+
+export const COLORS = {
+  bg: '#0d0d1a',
+  card: '#1a1a2e',
+  cardBorder: '#2a2a4a',
+  primary: '#a855f7',
+  primaryDark: '#7c3aed',
+  accent: '#ff0080',
+  accentAlt: '#00d4ff',
+  text: '#ffffff',
+  textSecondary: '#9ca3af',
+  textMuted: '#6b7280',
+  success: '#22c55e',
+  warning: '#f59e0b',
+  danger: '#ef4444',
+  sliderTrack: '#2a2a4a',
+  sliderThumb: '#a855f7',
+  tabActive: '#a855f7',
+  tabInactive: '#6b7280',
+};
+
+export const COLOR_PRESETS: Record<string, [number, number, number]> = {
+  warm_white: [255, 200, 150],
+  cool_white: [200, 220, 255],
+  red: [255, 0, 0],
+  green: [0, 255, 0],
+  blue: [0, 0, 255],
+  purple: [128, 0, 255],
+  orange: [255, 100, 0],
+  cyan: [0, 255, 255],
+  pink: [255, 50, 150],
+  gold: [255, 180, 0],
+  disco_pink: [255, 0, 128],
+  neon_green: [57, 255, 20],
+  deep_blue: [0, 0, 180],
+  sunset: [255, 80, 20],
+  ice: [150, 220, 255],
+};
+
+export const EFFECT_ICONS: Record<string, string> = {
+  solid: '⬛',
+  rainbow: '🌈',
+  rainbow_wave: '🌊',
+  gradient: '📊',
+  breathing: '💨',
+  pulse: '💗',
+  strobe: '⚡',
+  fire: '🔥',
+  ice_fire: '🧊',
+  plasma: '🟣',
+  matrix: '💚',
+  rain: '🌧️',
+  aurora: '🌌',
+  sparkle: '✨',
+  comet: '☄️',
+  theater_chase: '🎭',
+  color_wipe: '🖌️',
+  twinkle: '⭐',
+  lava_lamp: '🫧',
+  vortex: '🌀',
+  dna_helix: '🧬',
+  equalizer: '📊',
+  wave: '〰️',
+  candy: '🍬',
+  ocean: '🐋',
+  sunset_glow: '🌅',
+};
+
+export const EFFECTS_LIST = [
+  'solid',
+  'rainbow',
+  'rainbow_wave',
+  'gradient',
+  'breathing',
+  'pulse',
+  'strobe',
+  'fire',
+  'ice_fire',
+  'plasma',
+  'matrix',
+  'rain',
+  'aurora',
+  'sparkle',
+  'comet',
+  'theater_chase',
+  'color_wipe',
+  'twinkle',
+  'lava_lamp',
+  'vortex',
+  'dna_helix',
+  'equalizer',
+  'wave',
+  'candy',
+  'ocean',
+  'sunset_glow',
+];
+
+export const MUSIC_MODES = [
+  {id: 'off', label: '🔇 Off'},
+  {id: 'spectrum', label: '🌈 Spectrum'},
+  {id: 'pulse', label: '💗 Pulse'},
+  {id: 'energy', label: '⚡ Energy'},
+  {id: 'vu_meter', label: '📊 VU Meter'},
+  {id: 'equalizer', label: '🎛️ Equalizer'},
+];
+
+export const QUICK_SCENES: Record<
+  string,
+  {effect: string; speed: number; brightness: number; color: [number, number, number]; icon: string}
+> = {
+  party: {effect: 'rainbow_wave', speed: 80, brightness: 100, color: [255, 0, 128], icon: '🎉'},
+  chill: {effect: 'breathing', speed: 20, brightness: 50, color: [0, 128, 255], icon: '😌'},
+  focus: {effect: 'solid', speed: 50, brightness: 70, color: [255, 200, 150], icon: '🧠'},
+  romantic: {effect: 'lava_lamp', speed: 25, brightness: 40, color: [255, 50, 100], icon: '❤️'},
+  ocean: {effect: 'ocean', speed: 30, brightness: 60, color: [0, 100, 200], icon: '🌊'},
+  forest: {effect: 'aurora', speed: 30, brightness: 50, color: [0, 200, 50], icon: '🌲'},
+  sunset: {effect: 'sunset_glow', speed: 15, brightness: 70, color: [255, 80, 20], icon: '🌅'},
+  disco: {effect: 'strobe', speed: 90, brightness: 100, color: [255, 0, 255], icon: '🪩'},
+};

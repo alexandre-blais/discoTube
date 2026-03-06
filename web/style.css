@@ -1,0 +1,655 @@
+/* ============================================================
+   DiscoTube – Mobile-First Phone Control UI Stylesheet
+   ============================================================ */
+
+:root {
+    --bg: #0a0a0f;
+    --surface: #14141f;
+    --card: #1a1a2e;
+    --border: #2a2a40;
+    --text: #e8e8f0;
+    --text-dim: #8888aa;
+    --accent: #ff0080;
+    --accent2: #00d4ff;
+    --accent3: #a855f7;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --glow: rgba(255, 0, 128, 0.3);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #14141f 0%, #1a1028 100%);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--danger);
+    transition: background 0.3s;
+}
+
+.status-dot.connected {
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+}
+
+.power-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.power-btn.on {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px var(--glow);
+}
+
+/* ── Tab Navigation ──────────────────────────────────── */
+
+.tabs {
+    display: flex;
+    overflow-x: auto;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: sticky;
+    top: 73px;
+    z-index: 99;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+    flex: 1;
+    min-width: 70px;
+    padding: 12px 8px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* ── Tab Content ─────────────────────────────────────── */
+
+.tab-content {
+    display: none;
+    padding: 16px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ── Cards ───────────────────────────────────────────── */
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+/* ── Color Picker ────────────────────────────────────── */
+
+.color-picker-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+#color-wheel {
+    border-radius: 50%;
+    cursor: crosshair;
+    touch-action: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.color-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    background: #ff0080;
+    box-shadow: 0 0 20px var(--glow);
+    transition: all 0.3s;
+}
+
+.color-inputs {
+    margin-top: 12px;
+}
+
+.color-inputs label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.color-inputs input[type="text"],
+.color-inputs input[type="number"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    width: 100%;
+}
+
+.rgb-row {
+    display: flex;
+    gap: 8px;
+}
+
+.rgb-row label {
+    flex: 1;
+}
+
+.rgb-row input {
+    width: 100% !important;
+}
+
+/* ── Preset Grid ─────────────────────────────────────── */
+
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.preset-swatch {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.preset-swatch:active {
+    transform: scale(0.9);
+}
+
+.preset-swatch.active {
+    border-color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.preset-swatch .tooltip {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.preset-swatch:hover .tooltip {
+    opacity: 1;
+}
+
+/* ── Sliders ─────────────────────────────────────────── */
+
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.slider-group .label {
+    font-size: 18px;
+    min-width: 24px;
+    text-align: center;
+}
+
+.slider-group input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--surface);
+    outline: none;
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--glow);
+}
+
+.slider-value, .temp-value {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-top: 6px;
+}
+
+/* ── Effects Grid ────────────────────────────────────── */
+
+.effects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.effect-btn {
+    padding: 12px 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: capitalize;
+}
+
+.effect-btn:active {
+    transform: scale(0.95);
+}
+
+.effect-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 0 15px var(--glow);
+}
+
+/* ── Music Visualizer ────────────────────────────────── */
+
+#audio-viz {
+    width: 100%;
+    height: 120px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+}
+
+.audio-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 36px;
+}
+
+.stat-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--surface);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.stat-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.1s;
+    width: 0%;
+}
+
+.stat-fill.bass { background: var(--accent); }
+.stat-fill.mid { background: var(--success); }
+.stat-fill.high { background: var(--accent2); }
+
+.beat-indicator {
+    text-align: center;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    font-size: 18px;
+    font-weight: 700;
+    opacity: 0.3;
+    transition: all 0.1s;
+}
+
+.beat-indicator.active {
+    opacity: 1;
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 0 20px var(--glow);
+}
+
+/* ── Zones ───────────────────────────────────────────── */
+
+.zone-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.zone-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+}
+
+.zone-label {
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.zone-detail {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 400;
+}
+
+.zone-item input[type="color"] {
+    width: 50px;
+    height: 36px;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background: none;
+}
+
+.hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+}
+
+/* ── Spiral Diagram ──────────────────────────────────── */
+
+.spiral-info {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.spiral-diagram {
+    width: 60px;
+    height: 200px;
+    border-radius: 30px;
+    border: 2px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.spiral-strip {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 3px,
+        rgba(255, 0, 128, 0.25) 3px,
+        rgba(255, 0, 128, 0.25) 4px
+    );
+}
+
+.spiral-strip.strip-1 {
+    bottom: 0;
+    height: 50%;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 3px,
+        rgba(255, 0, 128, 0.3) 3px,
+        rgba(255, 0, 128, 0.3) 4px
+    );
+}
+
+.spiral-strip.strip-2 {
+    top: 0;
+    height: 50%;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 3px,
+        rgba(0, 128, 255, 0.3) 3px,
+        rgba(0, 128, 255, 0.3) 4px
+    );
+}
+
+.spiral-label {
+    position: absolute;
+    left: 70px;
+    font-size: 10px;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+
+.spiral-label.bottom {
+    bottom: 20%;
+}
+
+.spiral-label.top {
+    top: 20%;
+}
+
+/* ── Buttons ─────────────────────────────────────────── */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-gradient {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-color: transparent;
+    color: white;
+}
+
+.btn-save {
+    background: var(--accent3);
+    border-color: transparent;
+    color: white;
+    width: auto;
+    min-width: 80px;
+}
+
+.btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
+    width: auto;
+}
+
+.btn-cancel {
+    background: var(--danger);
+    border-color: transparent;
+    color: white;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.timer-status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--accent2);
+    text-align: center;
+}
+
+/* ── Scenes ──────────────────────────────────────────── */
+
+.save-scene {
+    display: flex;
+    gap: 8px;
+}
+
+.save-scene input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
+.scene-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.scene-btn {
+    padding: 14px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.scene-btn:active {
+    transform: scale(0.95);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.device-info {
+    margin-top: 10px;
+    padding: 12px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    color: var(--text-dim);
+    overflow-x: auto;
+    max-height: 200px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ── Animations ──────────────────────────────────────── */
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 5px var(--glow); }
+    50% { box-shadow: 0 0 25px var(--glow); }
+}
+
+@keyframes beat-flash {
+    0% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0.3; transform: scale(1); }
+}

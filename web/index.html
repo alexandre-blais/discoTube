@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>DiscoTube Controller</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header>
+            <h1>🎵 DiscoTube</h1>
+            <div class="header-controls">
+                <span id="connection-status" class="status-dot"></span>
+                <button id="btn-power" class="power-btn" onclick="togglePower()">⏻</button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tabs">
+            <button class="tab active" data-tab="colors" onclick="switchTab('colors')">🎨 Colors</button>
+            <button class="tab" data-tab="effects" onclick="switchTab('effects')">✨ Effects</button>
+            <button class="tab" data-tab="music" onclick="switchTab('music')">🎵 Music</button>
+            <button class="tab" data-tab="zones" onclick="switchTab('zones')">📐 Zones</button>
+            <button class="tab" data-tab="scenes" onclick="switchTab('scenes')">💾 Scenes</button>
+        </nav>
+
+        <!-- ═══ Colors Tab ═══ -->
+        <section id="tab-colors" class="tab-content active">
+            <!-- Color Wheel -->
+            <div class="card">
+                <h3>Color</h3>
+                <div class="color-picker-wrap">
+                    <canvas id="color-wheel" width="280" height="280"></canvas>
+                    <div id="color-preview" class="color-preview"></div>
+                </div>
+                <div class="color-inputs">
+                    <label>HEX <input type="text" id="hex-input" value="#FF0080" 
+                           onchange="setColorHex(this.value)" maxlength="7"></label>
+                    <div class="rgb-row">
+                        <label>R <input type="number" id="r-input" min="0" max="255" value="255"
+                               onchange="setColorRGB()"></label>
+                        <label>G <input type="number" id="g-input" min="0" max="255" value="0"
+                               onchange="setColorRGB()"></label>
+                        <label>B <input type="number" id="b-input" min="0" max="255" value="128"
+                               onchange="setColorRGB()"></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Color Presets -->
+            <div class="card">
+                <h3>Quick Colors</h3>
+                <div id="color-presets" class="preset-grid"></div>
+            </div>
+
+            <!-- Color Temperature -->
+            <div class="card">
+                <h3>Color Temperature</h3>
+                <div class="slider-group">
+                    <span class="label">🕯️ Warm</span>
+                    <input type="range" id="color-temp" min="2000" max="9000" value="4000"
+                           oninput="setColorTemp(this.value)">
+                    <span class="label">❄️ Cool</span>
+                </div>
+                <div class="temp-value" id="temp-value">4000K</div>
+            </div>
+
+            <!-- Brightness -->
+            <div class="card">
+                <h3>Brightness</h3>
+                <div class="slider-group">
+                    <span class="label">🌑</span>
+                    <input type="range" id="brightness" min="0" max="100" value="80"
+                           oninput="setBrightness(this.value)">
+                    <span class="label">☀️</span>
+                </div>
+                <div class="slider-value" id="brightness-value">80%</div>
+            </div>
+        </section>
+
+        <!-- ═══ Effects Tab ═══ -->
+        <section id="tab-effects" class="tab-content">
+            <div class="card">
+                <h3>Effect Speed</h3>
+                <div class="slider-group">
+                    <span class="label">🐢</span>
+                    <input type="range" id="speed" min="1" max="100" value="50"
+                           oninput="setSpeed(this.value)">
+                    <span class="label">🐇</span>
+                </div>
+                <div class="slider-value" id="speed-value">50%</div>
+            </div>
+            <div class="card">
+                <h3>Effects</h3>
+                <div id="effects-grid" class="effects-grid"></div>
+            </div>
+        </section>
+
+        <!-- ═══ Music Tab ═══ -->
+        <section id="tab-music" class="tab-content">
+            <div class="card">
+                <h3>Music Reactive Mode</h3>
+                <div id="music-modes" class="effects-grid"></div>
+            </div>
+            <div class="card">
+                <h3>Sensitivity</h3>
+                <div class="slider-group">
+                    <span class="label">Low</span>
+                    <input type="range" id="music-sensitivity" min="10" max="300" value="100"
+                           oninput="setMusicSensitivity(this.value)">
+                    <span class="label">High</span>
+                </div>
+                <div class="slider-value" id="sensitivity-value">1.0x</div>
+            </div>
+            <div class="card">
+                <h3>Audio Visualizer</h3>
+                <canvas id="audio-viz" width="320" height="120"></canvas>
+                <div class="audio-stats">
+                    <div class="stat"><span class="stat-label">Bass</span><div class="stat-bar"><div id="bar-bass" class="stat-fill bass"></div></div></div>
+                    <div class="stat"><span class="stat-label">Mid</span><div class="stat-bar"><div id="bar-mid" class="stat-fill mid"></div></div></div>
+                    <div class="stat"><span class="stat-label">High</span><div class="stat-bar"><div id="bar-high" class="stat-fill high"></div></div></div>
+                </div>
+                <div id="beat-indicator" class="beat-indicator">🥁 BEAT</div>
+            </div>
+        </section>
+
+        <!-- ═══ Zones Tab ═══ -->
+        <section id="tab-zones" class="tab-content">
+            <div class="card">
+                <h3>Spiral Layout</h3>
+                <p class="hint">LEDs spiral inside the white acrylic tube · ~2.6 pixels per revolution · 38 wraps bottom→top</p>
+                <div class="spiral-info">
+                    <div class="spiral-diagram">
+                        <div class="spiral-strip strip-1"></div>
+                        <div class="spiral-strip strip-2"></div>
+                        <span class="spiral-label bottom">Strip 1 · Bottom</span>
+                        <span class="spiral-label top">Strip 2 · Top</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Strip Zones</h3>
+                <p class="hint">WS2811 strip spirals continuously up the tube (100 pixels)</p>
+                <div class="zone-list">
+                    <div class="zone-item">
+                        <div class="zone-label">🌀 Bottom Half
+                            <span class="zone-detail">Pixels 0–49 · Wraps 1–19</span>
+                        </div>
+                        <input type="color" id="zone-0-color" value="#ff0080"
+                               onchange="setZoneColor(0, this.value)">
+                    </div>
+                    <div class="zone-item">
+                        <div class="zone-label">🌀 Top Half
+                            <span class="zone-detail">Pixels 50–99 · Wraps 20–38</span>
+                        </div>
+                        <input type="color" id="zone-1-color" value="#0080ff"
+                               onchange="setZoneColor(1, this.value)">
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Spiral Gradient</h3>
+                <button class="btn btn-gradient" onclick="applyGradient()">Apply Vertical Gradient</button>
+                <p class="hint">Blends the two strip colors along the spiral path</p>
+            </div>
+            <div class="card">
+                <h3>Auto-Off Timer</h3>
+                <div class="timer-controls">
+                    <button class="btn btn-sm" onclick="setTimer(15)">15m</button>
+                    <button class="btn btn-sm" onclick="setTimer(30)">30m</button>
+                    <button class="btn btn-sm" onclick="setTimer(60)">1h</button>
+                    <button class="btn btn-sm" onclick="setTimer(120)">2h</button>
+                    <button class="btn btn-sm btn-cancel" onclick="setTimer(0)">Cancel</button>
+                </div>
+                <div id="timer-status" class="timer-status"></div>
+            </div>
+        </section>
+
+        <!-- ═══ Scenes Tab ═══ -->
+        <section id="tab-scenes" class="tab-content">
+            <div class="card">
+                <h3>Save Current Scene</h3>
+                <div class="save-scene">
+                    <input type="text" id="scene-name" placeholder="Scene name...">
+                    <button class="btn btn-save" onclick="saveScene()">💾 Save</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Quick Scenes</h3>
+                <div class="scene-grid">
+                    <button class="scene-btn" onclick="applyQuickScene('party')">🎉 Party</button>
+                    <button class="scene-btn" onclick="applyQuickScene('chill')">😌 Chill</button>
+                    <button class="scene-btn" onclick="applyQuickScene('focus')">🧠 Focus</button>
+                    <button class="scene-btn" onclick="applyQuickScene('romantic')">❤️ Romantic</button>
+                    <button class="scene-btn" onclick="applyQuickScene('ocean')">🌊 Ocean</button>
+                    <button class="scene-btn" onclick="applyQuickScene('forest')">🌲 Forest</button>
+                    <button class="scene-btn" onclick="applyQuickScene('sunset')">🌅 Sunset</button>
+                    <button class="scene-btn" onclick="applyQuickScene('disco')">🪩 Disco</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Saved Scenes</h3>
+                <div id="saved-scenes" class="scene-grid"></div>
+            </div>
+            <div class="card">
+                <h3>Device Info</h3>
+                <button class="btn" onclick="discoverDevices()">🔍 Device Info</button>
+                <pre id="device-info" class="device-info"></pre>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

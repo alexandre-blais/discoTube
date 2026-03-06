@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiscoTube 3D Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="simulator">
+        <!-- 3D Canvas -->
+        <div id="canvas-container"></div>
+
+        <!-- Control Panel -->
+        <div id="controls" class="panel">
+            <h1>🎵 DiscoTube Simulator</h1>
+            <p class="subtitle">3¼" White Acrylic · 5ft · Spiral LED · WS2811 24V 10m · 100 Pixels · Wood Base</p>
+
+            <!-- Effect Selector -->
+            <div class="control-group">
+                <label>Effect Mode</label>
+                <select id="effect-select">
+                    <option value="rainbow">🌈 Rainbow</option>
+                    <option value="rainbow_wave">🌊 Rainbow Wave</option>
+                    <option value="gradient">📊 Gradient</option>
+                    <option value="breathing">💨 Breathing</option>
+                    <option value="pulse">💗 Pulse</option>
+                    <option value="strobe">⚡ Strobe</option>
+                    <option value="fire">🔥 Fire</option>
+                    <option value="ice_fire">🧊 Ice Fire</option>
+                    <option value="plasma">🟣 Plasma</option>
+                    <option value="matrix">💚 Matrix</option>
+                    <option value="rain">🌧️ Rain</option>
+                    <option value="aurora">🌌 Aurora</option>
+                    <option value="sparkle">✨ Sparkle</option>
+                    <option value="comet">☄️ Comet</option>
+                    <option value="theater_chase">🎭 Theater Chase</option>
+                    <option value="color_wipe">🖌️ Color Wipe</option>
+                    <option value="twinkle">⭐ Twinkle</option>
+                    <option value="lava_lamp">🫧 Lava Lamp</option>
+                    <option value="vortex">🌀 Vortex</option>
+                    <option value="dna_helix">🧬 DNA Helix</option>
+                    <option value="equalizer">📊 Equalizer</option>
+                    <option value="wave">〰️ Wave</option>
+                    <option value="candy">🍬 Candy</option>
+                    <option value="ocean">🐋 Ocean</option>
+                    <option value="sunset_glow">🌅 Sunset Glow</option>
+                    <option value="solid">⬛ Solid Color</option>
+                </select>
+            </div>
+
+            <!-- Music Mode -->
+            <div class="control-group">
+                <label>Music Mode</label>
+                <select id="music-mode">
+                    <option value="off">🔇 Off</option>
+                    <option value="spectrum">🌈 Spectrum</option>
+                    <option value="pulse">💗 Beat Pulse</option>
+                    <option value="energy">⚡ Energy</option>
+                    <option value="vu_meter">📊 VU Meter</option>
+                    <option value="equalizer" selected>🎛️ Equalizer</option>
+                </select>
+            </div>
+
+            <!-- Color Picker -->
+            <div class="control-group">
+                <label>Primary Color</label>
+                <input type="color" id="color1" value="#ff0080">
+            </div>
+            <div class="control-group">
+                <label>Secondary Color</label>
+                <input type="color" id="color2" value="#0080ff">
+            </div>
+
+            <!-- Sliders -->
+            <div class="control-group">
+                <label>Brightness: <span id="val-brightness">80</span>%</label>
+                <input type="range" id="brightness" min="0" max="100" value="80">
+            </div>
+            <div class="control-group">
+                <label>Speed: <span id="val-speed">50</span>%</label>
+                <input type="range" id="speed" min="1" max="100" value="50">
+            </div>
+            <div class="control-group">
+                <label>Blur: <span id="val-blur">70</span>%</label>
+                <input type="range" id="blur" min="0" max="100" value="70">
+            </div>
+
+            <!-- Audio Section -->
+            <div class="control-group audio-section">
+                <label>🎵 Simulated Audio</label>
+                <div class="audio-bars">
+                    <div class="audio-bar-wrap">
+                        <div class="audio-bar bass" id="viz-bass"></div>
+                        <span>Bass</span>
+                    </div>
+                    <div class="audio-bar-wrap">
+                        <div class="audio-bar mid" id="viz-mid"></div>
+                        <span>Mid</span>
+                    </div>
+                    <div class="audio-bar-wrap">
+                        <div class="audio-bar high" id="viz-high"></div>
+                        <span>High</span>
+                    </div>
+                </div>
+                <div id="beat-dot" class="beat-dot">BEAT</div>
+            </div>
+
+            <!-- Camera Controls -->
+            <div class="control-group">
+                <label>Camera</label>
+                <div class="cam-buttons">
+                    <button onclick="setCameraPreset('front')">Front</button>
+                    <button onclick="setCameraPreset('top')">Top</button>
+                    <button onclick="setCameraPreset('side')">Side</button>
+                    <button onclick="setCameraPreset('orbit')">Auto Orbit</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats" id="stats">
+                <span>WS2811 24V · 10m · 100 pixels</span> |
+                <span>3¼"×5ft acrylic</span> |
+                <span>spiral · ~2.6/wrap · 38 revolutions</span> |
+                <span>FPS: <span id="fps">60</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="simulator.js"></script>
+</body>
+</html>
